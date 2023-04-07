@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nodeapplication/provider/notes_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/homepage.dart';
 
@@ -12,12 +14,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NotesProvider(),)
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
       home: HomePage(),
-    );
+    ),
+      );
   }
 }
