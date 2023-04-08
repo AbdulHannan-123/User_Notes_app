@@ -18,11 +18,14 @@ class _HomePageState extends State<HomePage> {
     NotesProvider noteprovider = Provider.of<NotesProvider>(context);
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
+        appBar: 
+        AppBar(
           title: const Text("Notes App"),
           centerTitle: true,
         ),
-        body: Container(
+        body:noteprovider.isLoading
+        ? const Center(child: CircularProgressIndicator(),)
+        : Container(
           child:noteprovider.notes.length > 0 
           ?  GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
