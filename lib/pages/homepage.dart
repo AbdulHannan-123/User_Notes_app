@@ -23,52 +23,68 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         body: Container(
-          child: GridView.builder(
+          child:noteprovider.notes.length > 0 
+          ?  GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
             itemCount: noteprovider.notes.length,
             itemBuilder: (context, index) {
               Note currentnote = noteprovider.notes[index];
-              return Container(
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black54,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      currentnote.title!,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          decoration: TextDecoration.underline),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      currentnote.content!,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontStyle: FontStyle.italic,
-                        fontSize: 18,
+              return GestureDetector(
+                onTap: (){
+                   Navigator.push(
+              context,
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) =>  AddNewPage(isUpdate: true, note: currentnote,),
+              ),
+            );
+                },
+                onLongPress: () {
+                  noteprovider.deleteNote(currentnote);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black54,
+                        width: 2,
                       ),
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        currentnote.title!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            decoration: TextDecoration.underline),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        currentnote.content!,
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontStyle: FontStyle.italic,
+                          fontSize: 18,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
-          ),
+          )
+          : const Text("No Notes Yet")
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
@@ -77,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (context) => const AddNewPage(),
+                builder: (context) =>const AddNewPage(isUpdate: false),
               ),
             );
           },

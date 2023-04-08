@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class AddNewPage extends StatefulWidget {
-  const AddNewPage({super.key});
+  final bool isUpdate;
+  final Note? note;
+  const AddNewPage({super.key, required this.isUpdate, this.note});
 
   @override
   State<AddNewPage> createState() => _AddNewPageState();
@@ -19,6 +21,8 @@ class _AddNewPageState extends State<AddNewPage> {
   TextEditingController contentcontroller = TextEditingController();
 
   FocusNode notefocus = FocusNode();
+
+
 
   void addNewNode(){
     Note newNote=Note(
@@ -33,13 +37,34 @@ class _AddNewPageState extends State<AddNewPage> {
     Navigator.pop(context);
   }
 
+  void updateNote(){
+    widget.note!.title = titlecontroller.text;
+              widget.note!.content = contentcontroller.text;
+              Provider.of<NotesProvider>(context, listen: false).updateNote(widget.note!);
+              Navigator.pop(context);
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isUpdate) {
+      titlecontroller.text = widget.note!.title!;
+      contentcontroller.text = widget.note!.content!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(onPressed: (){
-            addNewNode();
+            if (widget.isUpdate) {
+              updateNote();
+            } else {
+              addNewNode();
+            }
           }, icon:const Icon(Icons.check))
         ],
       ),
@@ -49,7 +74,7 @@ class _AddNewPageState extends State<AddNewPage> {
           children: [
              TextField(
               controller: titlecontroller,
-              autofocus: true,  
+              autofocus: widget.isUpdate?false : true,  
               style:const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold
